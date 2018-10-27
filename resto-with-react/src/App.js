@@ -59,14 +59,38 @@ class App extends Component {
         console.log("DELETE");
         fetch('http://localhost:8080/api/restaurants/'+id, { method: "DELETE" })
             .then((responseJSON) => {
+                let oldResto = this.state.resto;
                 this.setState({
-                    resto: this.state.resto,
+                    resto: oldResto,
                     totalPage: this.state.totalPage
                 });
                 return responseJSON.json();
             })
             .catch(err => {
                 console.log("Erreur dans le DELETE : " + err);
+            });
+    }
+
+    getDataFromServerParam(numPage, nbPerPage) {
+        console.log("--- GETTING DATA ---");
+        fetch('http://localhost:8080/api/restaurants?page=' + numPage + '&pagesize=' + nbPerPage)
+            .then(response => {
+                return response.json();   // transforme le json texte en objet js
+            })
+            .then(data => {   // data c'est le texte json de response ci-dessus
+                let newResto = [];
+                data.data.forEach((el) => {
+                    newResto.push({"id" : el._id, "name" : el.name, "cuisine": el.cuisine});
+                });
+                this.setState({
+                    resto: newResto,
+                    totalPage: data.count,
+                    currentPage: numPage,
+                    nbRestoPerPage: nbPerPage
+                });
+            })
+            .catch(err => {
+                console.log("Erreur dans le GET : " + err);
             });
     }
 
@@ -146,7 +170,8 @@ class App extends Component {
         // on a fait avec VueJS
         //this.getDataFromServer();
         //this.getDataFromServer2();
-        this.getDataFromServer3();
+        //this.getDataFromServer3();
+        this.getDataFromServerParam(this.state.currentPage, this.state.nbRestoPerPage);
     }
 
     render() {
@@ -209,7 +234,7 @@ class App extends Component {
                               ref={(input) => this.input = input}
                               className="form-control" placeholder="Chercher par nom"/>
                       </div>
-                      Nombre de Resto : {this.state.resto.length}
+                      Nombre de Resto : {this.state.resto.length} | Page {this.state.currentPage} / {Math.ceil(this.state.totalPage / this.state.nbRestoPerPage)}
                       <table className="table table-bordered">
                           <thead className="thead-dark">
                           <tr>
