@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-import Pagination from 'react-js-pagination';
+//import Pagination from 'react-js-pagination';
+// import Pagination from './components/Pagination';
 import Resto from './components/Resto';
 
 class App extends Component {
@@ -11,6 +12,8 @@ class App extends Component {
         super(props);
 
         this.state = {
+            add: false,
+            update: false,
             currentPage: 1,
             totalPage: 0,
             nbRestoPerPage: 5,
@@ -20,7 +23,12 @@ class App extends Component {
         this.handleChangeSelectTag = this.handleChangeSelectTag.bind(this);
     }
 
-    handlePageChange(pageNumber) {
+    onClickAdd() {
+        let add_ = this.state.add;
+        this.setState({ add: !add_ });
+    }
+
+    onPageChange(pageNumber) {
         console.log("PAGE n° : "+pageNumber);
         this.setState({ currentPage: pageNumber })
     }
@@ -52,6 +60,7 @@ class App extends Component {
     };
 
     addResto() {
+        console.log("ADD");
         let oldResto = this.state.resto;
     }
 
@@ -69,6 +78,12 @@ class App extends Component {
             .catch(err => {
                 console.log("Erreur dans le DELETE : " + err);
             });
+    }
+
+    onClickUpdate(id) {
+        console.log("UPDATE");
+        let update_ = this.state.update;
+        this.setState({ update: !update_ });
     }
 
     getDataFromServerParam(numPage, nbPerPage) {
@@ -177,12 +192,13 @@ class App extends Component {
     render() {
         console.log("RENDER taille "+this.state.totalPage);
         let listAvecComponent = this.state.resto.map((el, index) => {
-            console.log("------------------ "+el.id);
+            //console.log("------------------ "+el.id);
             return <Resto
                 id={el.id}
                 name={el.name}
                 cuisine={el.cuisine}
                 key={index}
+                updateResto={this.onClickUpdate.bind(this, el.id, el.name, el.cuisine)}
                 removeResto={this.removeResto.bind(this)}
             />
         });
@@ -209,69 +225,70 @@ class App extends Component {
               </nav>
               <div className="container">
                   <br/>
-                  {/*              <h2>Table des restaurants</h2>
-                  <button type="button" className="btn btn-dark mb-3"><i className="fa fa-plus"></i></button>
+                  <h2>Table des restaurants</h2>
+                  <button type="button" className="btn btn-dark mb-3" onClick={this.onClickAdd.bind(this)}><i className="fa fa-plus"></i></button>
 
-                  <div className="alert alert-success" role="alert">
+                  {/*<div className="alert alert-success" role="alert">
                       <h6 className="alert-heading">Opération réussie</h6>
-                  </div>
-    */}
+                  </div>*/}
+
                   <div className="row">
-                      <div className="input-group mb-3">
-                          <div className="input-group-prepend">
-                              <label className="input-group-text" htmlFor="elementPageDropDown">Elements par page</label>
+                      <div className="col-lg-8" className={this.state.add || this.state.update ? 'col-lg-8' : 'col-lg'}>
+                          <div className="input-group mb-3">
+                              <div className="input-group-prepend">
+                                  <label className="input-group-text" htmlFor="elementPageDropDown">Elements par page</label>
+                              </div>
+                              <select className="custom-select" id="elementPageDropDown" value={this.state.nbRestoPerPage}
+                                      onChange={this.handleChangeSelectTag}>
+                                  <option value="5">5</option>
+                                  <option value="10">10</option>
+                                  <option value="15">15</option>
+                              </select>
                           </div>
-                          <select className="custom-select" id="elementPageDropDown" value={this.state.nbRestoPerPage}
-                                  onChange={this.handleChangeSelectTag}>
-                              <option value="5">5</option>
-                              <option value="10">10</option>
-                              <option value="15">15</option>
-                          </select>
+                          <div className="input-group mb-3">
+                              <input
+                                  type="text"
+                                  ref={(input) => this.input = input}
+                                  className="form-control" placeholder="Chercher par nom"/>
+                          </div>
+                          Nombre de Resto : {this.state.resto.length} | Page {this.state.currentPage} / {Math.ceil(this.state.totalPage / this.state.nbRestoPerPage)}
+                          <table className="table table-bordered">
+                              <thead className="thead-dark">
+                              <tr>
+                                  <th>Nom</th>
+                                  <th>Cuisine</th>
+                                  <th>Action</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              {listAvecComponent}
+                              </tbody>
+                          </table>
+                          <br/>
+                          <div className="navigation">
+                              {/*laPagination*/}
+                              {/*<Pagination items={this.state.resto} onChangePage={this.onPageChange}/>*/}
+                              <div className="btn-toolbar">
+                                  <div className="btn-group mr-2">
+                                      <button type="button" className="btn btn-dark">1</button>
+                                      <button type="button" className="btn btn-dark">2</button>
+                                      <button type="button" className="btn btn-dark">3</button>
+                                      <button className="btn btn-light">...</button>
+                                      <button type="button" className="btn btn-dark">{Math.ceil(this.state.totalPage / this.state.nbRestoPerPage)}</button>
+                                  </div>
+                              </div>
+                          </div>
                       </div>
-                      <div className="input-group mb-3">
-                          <input
-                              type="text"
-                              ref={(input) => this.input = input}
-                              className="form-control" placeholder="Chercher par nom"/>
-                      </div>
-                      Nombre de Resto : {this.state.resto.length} | Page {this.state.currentPage} / {Math.ceil(this.state.totalPage / this.state.nbRestoPerPage)}
-                      <table className="table table-bordered">
-                          <thead className="thead-dark">
-                          <tr>
-                              <th>Nom</th>
-                              <th>Cuisine</th>
-                              <th>Action</th>
-                          </tr>
-                          </thead>
-                          <tbody>
-                          {listAvecComponent}
-                          </tbody>
-                      </table>
-                      <br/>
-                      <div className="navigation">
-                          <ul>
-
-                          </ul>
-                          {/*laPagination*/}
-                          <button type="button" className="btn btn-dark">1</button>
-                          <button type="button" className="btn btn-dark">2</button>
-                          <button type="button" className="btn btn-dark">3</button>
-                          ..........
-                          <button type="button" className="btn btn-dark">{Math.ceil(this.state.totalPage / this.state.nbRestoPerPage)}</button>
-                      </div>
-
-
-
 
                       {/* Formulaire de modification */}
-                      {/*<div className="col-lg-4" id="formulaireInsertion">
+                      <div className={this.state.update ? 'col-lg-4' : 'd-none'} id="formulaireInsertion">
                           <div className="card">
                               <div className="card-body">
                                   <form id="formulaireModificationform">
                                       <div className="form-group">
                                           <label htmlFor="idInput">Id :</label>
                                           <input className="form-control" id="idInput" type="text" name="_id"
-                                                 placeholder="Id du restaurant à modifier" readOnly={true}/>
+                                                 value={listAvecComponent.id} placeholder="Id du restaurant à modifier" readOnly={true}/>
                                       </div>
                                       <div className="form-group">
                                           <label htmlFor="restaurantInput">Nom</label>
@@ -287,11 +304,11 @@ class App extends Component {
                                   </form>
                               </div>
                           </div>
-                      </div>*/}
+                      </div>
 
 
                       {/* Formulaire d'ajout */}
-                      {/*<div className="col-lg-4" id="formulaireInsertion">
+                      <div className={this.state.add ? 'col-lg-4' : 'd-none'} id="formulaireInsertion">
                           <div className="card">
                               <div className="card-body">
                                   <form id="formulaireInsertionform">
@@ -305,12 +322,11 @@ class App extends Component {
                                           <input className="form-control" id="cuisineInputI" type="text" name="cuisine"
                                                  required placeholder="Michel's cuisine"/>
                                       </div>
-                                      <button className="btn btn-dark">Créer restaurant
-                                      </button>
+                                      <button className="btn btn-dark" onClick={this.addResto.bind(this)}>Créer restaurant</button>
                                   </form>
                               </div>
                           </div>
-                      </div>*/}
+                      </div>
 
 
                   </div>
