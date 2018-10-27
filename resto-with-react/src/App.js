@@ -28,6 +28,7 @@ class App extends Component {
                     //obj["name"] = el.name;
                     //obj["cuisine"] = el.cuisine;
                     newResto.push({"name" : el.name, "cuisine": el.cuisine});
+                    //newResto.push(el.name);
                 });
 
                 this.setState({
@@ -48,10 +49,11 @@ class App extends Component {
     }
 
     render() {
-        console.log("RENDER");
+        console.log("RENDER"/*+this.state.resto*/);
         let listAvecComponent = this.state.resto.map((el, index) => {
             return <Resto
-                name={el}
+                name={el.name}
+                cuisine={el.cuisine}
                 key={index}
             />
         });
