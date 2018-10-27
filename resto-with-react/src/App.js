@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+import Pagination from 'react-js-pagination';
 import Resto from './components/Resto';
 
 class App extends Component {
@@ -10,8 +11,105 @@ class App extends Component {
         super(props);
 
         this.state = {
-            resto: [],
-        }
+            currentPage: 1,
+            totalPage: 0,
+            nbRestoPerPage: 5,
+            resto: []
+        };
+
+        this.handleChangeSelectTag = this.handleChangeSelectTag.bind(this);
+    }
+
+    handlePageChange(pageNumber) {
+        console.log("PAGE n° : "+pageNumber);
+        this.setState({ currentPage: pageNumber })
+    }
+
+    handleChangeSelectTag(event) {
+        console.log("Resto per page : "+event.target.value);
+        this.setState({ nbRestoPerPage: event.target.value });
+    }
+
+    searchResto(restoId) {
+        console.log("--- SEARCH DATA ---");
+        fetch('http://localhost:8080/api/restaurants/' + restoId)
+            .then(response => {
+                return response.json();   // transforme le json texte en objet js
+            })
+            .then(data => {   // data c'est le texte json de response ci-dessus
+                let newResto = [];
+                data.data.forEach((el) => {
+                    newResto.push({"name" : el.name, "cuisine": el.cuisine});
+                });
+                this.setState({
+                    resto: newResto,
+                    totalPage: data.count
+                });
+            })
+            .catch(err => {
+                console.log("Erreur dans le GET : " + err);
+            });
+    };
+
+    addResto() {
+        let oldResto = this.state.resto;
+    }
+
+    removeResto(id) {
+        console.log("DELETE");
+        fetch('http://localhost:8080/api/restaurants/'+id, { method: "DELETE" })
+            .then((responseJSON) => {
+                this.setState({
+                    resto: this.state.resto,
+                    totalPage: this.state.totalPage
+                });
+                return responseJSON.json();
+            })
+            .catch(err => {
+                console.log("Erreur dans le DELETE : " + err);
+            });
+    }
+
+    getDataFromServer3() {
+        console.log("--- GETTING DATA ---");
+        fetch('http://localhost:8080/api/restaurants?page=' + this.state.currentPage + '&pagesize=' + this.state.nbRestoPerPage)
+            .then(response => {
+                return response.json();   // transforme le json texte en objet js
+            })
+            .then(data => {   // data c'est le texte json de response ci-dessus
+                let newResto = [];
+                data.data.forEach((el) => {
+                    newResto.push({"id" : el._id, "name" : el.name, "cuisine": el.cuisine});
+                });
+                this.setState({
+                    resto: newResto,
+                    totalPage: data.count
+                });
+            })
+            .catch(err => {
+                console.log("Erreur dans le GET : " + err);
+            });
+    }
+
+    getDataFromServer2() {
+        console.log("--- GETTING DATA ---");
+        fetch('http://localhost:8080/api/restaurants?page=' + this.state.currentPage)
+            .then(response => {
+                return response.json();   // transforme le json texte en objet js
+            })
+            .then(data => {   // data c'est le texte json de response ci-dessus
+                let newResto = [];
+                data.data.forEach((el) => {
+                    newResto.push({"name" : el.name, "cuisine": el.cuisine});
+                });
+                this.setState({
+                    resto: newResto,
+                    totalPage: data.count
+                });
+            })
+            .catch(err => {
+                console.log("Erreur dans le GET : " + err);
+            });
     }
 
     getDataFromServer() {
@@ -32,7 +130,8 @@ class App extends Component {
                 });
 
                 this.setState({
-                    resto: newResto
+                    resto: newResto,
+                    totalPage: data.count
                 });
             })
             .catch(err => {
@@ -45,18 +144,38 @@ class App extends Component {
         // this runs right before the <App> is rendered
         // on va chercher des donnees sur le Web avec fetch, comme
         // on a fait avec VueJS
-        this.getDataFromServer();
+        //this.getDataFromServer();
+        //this.getDataFromServer2();
+        this.getDataFromServer3();
     }
 
     render() {
-        console.log("RENDER"/*+this.state.resto*/);
+        console.log("RENDER taille "+this.state.totalPage);
         let listAvecComponent = this.state.resto.map((el, index) => {
+            console.log("------------------ "+el.id);
             return <Resto
+                id={el.id}
                 name={el.name}
                 cuisine={el.cuisine}
                 key={index}
+                removeResto={this.removeResto.bind(this)}
             />
         });
+
+        // Logique d'affichage du numero de page
+        const pageNums = [];
+        for (let i = 1; i <= Math.ceil(this.state.totalPage / this.state.nbRestoPerPage); i++) {
+            pageNums.push(i);
+        }
+        /*let laPagination = pageNums.map((num) => {
+            return <Pagination
+                activePage={this.state.currentPage}
+                itemsCountPerPage={10}
+                totalItemsCount={this.state.totalPage}
+                pageRangeDisplayed={5}
+                onChange={this.handlePageChange}
+            />
+        });*/
 
         return (
             <div> {/*className="App"*/}
@@ -77,14 +196,18 @@ class App extends Component {
                           <div className="input-group-prepend">
                               <label className="input-group-text" htmlFor="elementPageDropDown">Elements par page</label>
                           </div>
-                          <select v-model="displayNumber" className="custom-select" id="elementPageDropDown">
+                          <select className="custom-select" id="elementPageDropDown" value={this.state.nbRestoPerPage}
+                                  onChange={this.handleChangeSelectTag}>
                               <option value="5">5</option>
                               <option value="10">10</option>
                               <option value="15">15</option>
                           </select>
                       </div>
                       <div className="input-group mb-3">
-                          <input className="form-control" placeholder="Chercher par nom"/>
+                          <input
+                              type="text"
+                              ref={(input) => this.input = input}
+                              className="form-control" placeholder="Chercher par nom"/>
                       </div>
                       Nombre de Resto : {this.state.resto.length}
                       <table className="table table-bordered">
@@ -97,23 +220,19 @@ class App extends Component {
                           </thead>
                           <tbody>
                           {listAvecComponent}
-                          {/*<tr>
-                              <td>azertyuiop</td>
-                              <td>azertyuiop</td>
-                              <td>
-                                  <button className="btn btn-dark"><i className="fa fa-edit"></i></button>
-                                  <button className="btn btn-dark"><i className="fa fa-trash"></i></button>
-                              </td>
-                          </tr>*/}
                           </tbody>
                       </table>
                       <br/>
                       <div className="navigation">
+                          <ul>
+
+                          </ul>
+                          {/*laPagination*/}
                           <button type="button" className="btn btn-dark">1</button>
                           <button type="button" className="btn btn-dark">2</button>
                           <button type="button" className="btn btn-dark">3</button>
                           ..........
-                          <button type="button" className="btn btn-dark">max</button>
+                          <button type="button" className="btn btn-dark">{Math.ceil(this.state.totalPage / this.state.nbRestoPerPage)}</button>
                       </div>
 
 
