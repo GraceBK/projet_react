@@ -14,6 +14,11 @@ class App extends Component {
         this.state = {
             add: false,
             update: false,
+            showSuccess: false,
+            message: '',
+            id: '',
+            nameResto: '',
+            cuisineType: '',
             currentPage: 1,
             totalPage: 0,
             nbRestoPerPage: 5,
@@ -21,21 +26,33 @@ class App extends Component {
         };
 
         this.handleChangeSelectTag = this.handleChangeSelectTag.bind(this);
+        this.handleAddResto = this.handleAddResto.bind(this);
+        this.handleUpdateResto = this.handleUpdateResto.bind(this);
     }
 
     onClickAdd() {
         let add_ = this.state.add;
-        this.setState({ add: !add_ });
+        this.setState({
+            add: !add_,
+            update: false
+        });
     }
 
-    onPageChange(pageNumber) {
-        console.log("PAGE n° : "+pageNumber);
-        this.setState({ currentPage: pageNumber })
+    onClickUpdate() {
+        console.log("UPDATE");
+        /*let update_ = this.state.update;
+        this.setState({ update: !update_ });*/
+        this.setState({
+            update: true,
+            add: false
+        });
     }
 
     handleChangeSelectTag(event) {
         console.log("Resto per page : "+event.target.value);
         this.setState({ nbRestoPerPage: event.target.value });
+        //this.getDataFromServerParam(this.state.currentPage, this.state.nbRestoPerPage);
+        this.getDataFromServerParam(this.state.currentPage, event.target.value);
     }
 
     searchResto(restoId) {
@@ -57,11 +74,112 @@ class App extends Component {
             .catch(err => {
                 console.log("Erreur dans le GET : " + err);
             });
-    };
+    }
+    onPageChange(pageNumber) {
+        console.log("PAGE n° : "+pageNumber);
+        this.setState({ currentPage: pageNumber })
+    }
 
-    addResto() {
+    updateFormId(event) {
+        console.log("CUISINE "+event.target.value);
+        this.setState({
+            id: event.target.value
+        })
+    }
+
+    getId(index) {
+        console.log("-%-"+this);
+    }
+
+    updateFormCuisine(event) {
+        console.log("CUISINE "+event.target.value);
+        this.setState({
+            cuisineType: event.target.value
+        })
+    }
+
+    updateFormName(event) {
+        console.log("NAME "+event.target.value);
+        this.setState({
+            nameResto: event.target.value
+        })
+    }
+
+    handleAddResto(event) {
         console.log("ADD");
-        let oldResto = this.state.resto;
+        if (!this.state.nameResto || !this.state.cuisineType) {
+            console.log("Vide");
+            return;
+        }
+        event.preventDefault();
+        let form = {
+            name: this.state.nameResto,
+            cuisine: this.state.cuisineType
+        };
+
+        console.log("Successful "/* + this.state.nameResto + " -- " + this.state.cuisineType + " ** "*/ + JSON.stringify(form));
+        fetch('http://localhost:8080/api/restaurants/', {
+            method: "POST",
+            body: JSON.stringify(form),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(responseJSON => {
+                responseJSON.json().then(data => {
+                    console.log("Successful " + JSON.stringify(data));
+                });
+            })
+            .catch(err => {
+                console.log("Erreur dans le POST : " + err);
+            });
+        this.setState({
+            nameResto: '',
+            cuisineType: '',
+            add: false,
+            message: 'Ce restaurant a été ajouté',
+            showSuccess: true
+        });
+        this.getDataFromServerParam(this.state.currentPage, this.state.nbRestoPerPage);
+        setTimeout(
+            function () {
+                this.setState({
+                    showSuccess: false
+                });
+            }.bind(this), 3000
+        );
+    }
+
+    handleUpdateResto(event) {
+        console.log("ADD");
+        if (!this.state.nameResto || !this.state.cuisineType) {
+            console.log("Vide");
+            return;
+        }
+        event.preventDefault();
+        let form = {
+            name: this.state.nameResto,
+            cuisine: this.state.cuisineType
+        };
+
+        console.log("Successful "/* + this.state.nameResto + " -- " + this.state.cuisineType + " ** "*/ + JSON.stringify(form));
+        fetch('http://localhost:8080/api/restaurants/', {
+            method: "PUT",
+            body: JSON.stringify(form),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(responseJSON => {
+                responseJSON.json().then(data => {
+                    console.log("Successful " + JSON.stringify(data));
+                });
+            })
+            .catch(err => {
+                console.log("Erreur dans le POST : " + err);
+            });
     }
 
     removeResto(id) {
@@ -78,12 +196,7 @@ class App extends Component {
             .catch(err => {
                 console.log("Erreur dans le DELETE : " + err);
             });
-    }
-
-    onClickUpdate(id) {
-        console.log("UPDATE");
-        let update_ = this.state.update;
-        this.setState({ update: !update_ });
+        this.getDataFromServerParam(this.state.currentPage, this.state.nbRestoPerPage);
     }
 
     getDataFromServerParam(numPage, nbPerPage) {
@@ -193,14 +306,19 @@ class App extends Component {
         console.log("RENDER taille "+this.state.totalPage);
         let listAvecComponent = this.state.resto.map((el, index) => {
             //console.log("------------------ "+el.id);
+            let getId = this.getId.bind(index);
             return <Resto
                 id={el.id}
                 name={el.name}
                 cuisine={el.cuisine}
                 key={index}
-                updateResto={this.onClickUpdate.bind(this, el.id, el.name, el.cuisine)}
+                updateResto={this.onClickUpdate.bind(this)}
                 removeResto={this.removeResto.bind(this)}
             />
+        });
+
+        let nameResto = this.state.resto.map((el) => {
+            return el.name
         });
 
         // Logique d'affichage du numero de page
@@ -228,9 +346,10 @@ class App extends Component {
                   <h2>Table des restaurants</h2>
                   <button type="button" className="btn btn-dark mb-3" onClick={this.onClickAdd.bind(this)}><i className="fa fa-plus"></i></button>
 
-                  {/*<div className="alert alert-success" role="alert">
+                  <div className={this.state.showSuccess ? 'alert alert-success' : 'd-none'} role="alert">
                       <h6 className="alert-heading">Opération réussie</h6>
-                  </div>*/}
+                      <p>{this.state.message}</p>
+                  </div>
 
                   <div className="row">
                       <div className="col-lg-8" className={this.state.add || this.state.update ? 'col-lg-8' : 'col-lg'}>
@@ -285,22 +404,23 @@ class App extends Component {
                           <div className="card">
                               <div className="card-body">
                                   <form id="formulaireModificationform">
+                                      {/*value={this.state.inputAddCuisine}*/}
                                       <div className="form-group">
                                           <label htmlFor="idInput">Id :</label>
                                           <input className="form-control" id="idInput" type="text" name="_id"
-                                                 value={listAvecComponent.id} placeholder="Id du restaurant à modifier" readOnly={true}/>
+                                                 value={this.state.id} onChange={this.updateFormId.bind(this)} placeholder="Id du restaurant à modifier" readOnly={true}/>
                                       </div>
                                       <div className="form-group">
                                           <label htmlFor="restaurantInput">Nom</label>
                                           <input className="form-control" id="restaurantInput" type="text" name="nom"
-                                                 required placeholder="Michel's restaurant"/>
+                                                 required value={this.state.nameResto} onChange={this.updateFormName.bind(this)} placeholder="Michel's restaurant"/>
                                       </div>
                                       <div className="form-group">
                                           <label htmlFor="cuisineInput">Cuisine</label>
                                           <input className="form-control" id="cuisineInput" type="text" name="cuisine"
-                                                 required placeholder="Michel's cuisine"/>
+                                                 required value={this.state.cuisineType} onChange={this.updateFormCuisine.bind(this)} placeholder="Michel's cuisine"/>
                                       </div>
-                                      <button className="btn btn-dark">Modifier ce restaurant</button>
+                                      <button className="btn btn-dark" type="submit">Modifier ce restaurant</button>
                                   </form>
                               </div>
                           </div>
@@ -311,18 +431,18 @@ class App extends Component {
                       <div className={this.state.add ? 'col-lg-4' : 'd-none'} id="formulaireInsertion">
                           <div className="card">
                               <div className="card-body">
-                                  <form id="formulaireInsertionform">
+                                  <form id="formulaireInsertionform" onSubmit={this.handleAddResto}>
                                       <div className="form-group">
-                                          <label htmlFor="restaurantInput">Nom</label>
-                                          <input className="form-control" id="restaurantInputI" type="text" name="nom"
-                                                 required placeholder="Michel's restaurant"/>
+                                          <label htmlFor="restaurantInput">Nom</label>{/*ref={(inputNameResto) => this.state.newResto.nameResto = inputNameResto} */}
+                                          <input className="form-control" id="restaurantInputI" type="text"
+                                                 required value={this.state.nameResto} onChange={this.updateFormName.bind(this)} placeholder="Michel's restaurant"/>
                                       </div>
                                       <div className="form-group">
-                                          <label htmlFor="cuisineInput">Cuisine</label>
-                                          <input className="form-control" id="cuisineInputI" type="text" name="cuisine"
-                                                 required placeholder="Michel's cuisine"/>
+                                          <label htmlFor="cuisineInput">Cuisine</label>{/*ref={(inputCuisineType) => this.state.newResto.cuisineType = inputCuisineType}*/}
+                                          <input className="form-control" id="cuisineInputI" type="text"
+                                                 required value={this.state.cuisineType} onChange={this.updateFormCuisine.bind(this)} placeholder="Michel's cuisine"/>
                                       </div>
-                                      <button className="btn btn-dark" onClick={this.addResto.bind(this)}>Créer restaurant</button>
+                                      <button className="btn btn-dark" type="submit">Créer restaurant</button>
                                   </form>
                               </div>
                           </div>

@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ad0ec3e3-83b2-42e7-93db-3232b5af5d5a" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/components/Button.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/FormAdd.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Input.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Resto.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Resto.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -26,14 +29,14 @@
         <counts>
           <entry key="html" value="3" />
           <entry key="ico" value="1" />
-          <entry key="js" value="11" />
+          <entry key="js" value="16" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="HTML" value="3" />
           <entry key="Image" value="1" />
-          <entry key="JavaScript" value="11" />
+          <entry key="JavaScript" value="16" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.js.language.service.starts">
@@ -44,13 +47,13 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="html" value="9" />
-          <entry key="js" value="4652" />
+          <entry key="js" value="6703" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="HTML" value="9" />
-          <entry key="JavaScript" value="4652" />
+          <entry key="JavaScript" value="6703" />
         </counts>
       </usages-collector>
     </session>
@@ -60,18 +63,24 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/App.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1611">
-              <caret line="289" column="109" lean-forward="true" selection-start-line="289" selection-start-column="109" selection-end-line="289" selection-end-column="109" />
+            <state relative-caret-position="367">
+              <caret line="144" column="19" lean-forward="true" selection-start-line="144" selection-start-column="19" selection-end-line="144" selection-end-column="19" />
               <folding>
                 <element signature="e#0#41#0" expanded="true" />
+                <element signature="n#!!block;n#onClickAdd#0;n#App#0" />
+                <element signature="n#!!block;n#onClickUpdate#0;n#App#0" />
                 <element signature="n#!!block;n#searchResto#0;n#App#0" />
+                <element signature="n#!!block;n#onPageChange#0;n#App#0" />
+                <element signature="n#!!block;n#updateFormCuisine#0;n#App#0" />
+                <element signature="n#!!block;n#updateFormCuisine#1;n#App#0" />
+                <element signature="n#!!block;n#handleAddResto#1;n#App#0" />
                 <element signature="n#!!block;n#getDataFromServerParam#0;n#App#0" />
+                <element signature="n#!!block;n#getDataFromServer2#0;n#App#0" />
                 <element signature="n#!!block;n#getDataFromServer#0;n#App#0" />
                 <element signature="n#!!block;n#getDataFromServer#0;n#App#0" />
                 <element signature="e#3023#3047#0" />
                 <element signature="e#6922#7260#0" />
                 <element signature="e#191#324#0" />
-                <element signature="e#8485#9136#0" />
                 <element signature="e#8542#8726#0" />
                 <element signature="e#9155#9427#0" />
                 <element signature="e#9242#9506#0" />
@@ -83,22 +92,34 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/Pagination.js">
+        <entry file="file://$PROJECT_DIR$/src/components/Resto.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="23">
-              <caret line="121" column="16" selection-start-line="121" selection-start-column="16" selection-end-line="121" selection-end-column="16" />
+            <state relative-caret-position="253">
+              <caret line="11" column="89" selection-start-line="11" selection-start-column="78" selection-end-line="11" selection-end-column="89" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/index.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="276">
+              <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
               <folding>
-                <element signature="e#101#142#0" expanded="true" />
+                <element signature="e#0#26#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/Resto.js">
+        <entry file="file://$PROJECT_DIR$/src/components/Pagination.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="15" column="26" lean-forward="true" selection-start-line="15" selection-start-column="26" selection-end-line="15" selection-end-column="26" />
+            <state relative-caret-position="592">
+              <caret line="151" column="25" lean-forward="true" selection-start-line="151" selection-start-column="25" selection-end-line="151" selection-end-column="25" />
+              <folding>
+                <element signature="e#101#142#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -116,9 +137,23 @@
     <findStrings>
       <find>getDataFromServer</find>
       <find>onChangeP</find>
-      <find>handleChangeSelectTag</find>
       <find>onClickUpdate</find>
+      <find>vue</find>
+      <find>addResto</find>
+      <find>inputAddName</find>
+      <find>value1</find>
+      <find>handleAddResto</find>
+      <find>updateForm</find>
+      <find>updateFormName</find>
+      <find>nameResto</find>
+      <find>updateResto</find>
+      <find>updateFormCuisine</find>
+      <find>getDataFromServerParam</find>
+      <find>handleChangeSelectTag</find>
     </findStrings>
+    <replaceStrings>
+      <replace>nameResto</replace>
+    </replaceStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -129,6 +164,10 @@
         <option value="$PROJECT_DIR$/public/index.html" />
         <option value="$PROJECT_DIR$/src/components/SelectNbPerPage.js" />
         <option value="$PROJECT_DIR$/src/components/Pagination.js" />
+        <option value="$PROJECT_DIR$/src/components/InputName.js" />
+        <option value="$PROJECT_DIR$/src/components/Button.js" />
+        <option value="$PROJECT_DIR$/src/components/FormAdd.js" />
+        <option value="$PROJECT_DIR$/src/components/Input.js" />
         <option value="$PROJECT_DIR$/src/components/Resto.js" />
         <option value="$PROJECT_DIR$/src/App.js" />
       </list>
@@ -151,9 +190,9 @@
     </packageJsonPaths>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="538" />
+    <option name="x" value="613" />
     <option name="y" value="23" />
-    <option name="width" value="1356" />
+    <option name="width" value="1285" />
     <option name="height" value="903" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -222,20 +261,20 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1540630234054</updated>
-      <workItem from="1540630236118" duration="30927000" />
+      <workItem from="1540630236118" duration="48155000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="30927000" />
+    <option name="totallyTimeSpent" value="48155000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="538" y="23" width="1356" height="903" extended-state="0" />
+    <frame x="613" y="23" width="1285" height="903" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="npm" side_tool="true" />
       <window_info id="Favorites" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="0" weight="0.18202247" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.18161435" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" show_stripe_button="false" />
@@ -270,15 +309,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/App.test.js">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -295,37 +325,77 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="276">
+          <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Pagination.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="23">
-          <caret line="121" column="16" selection-start-line="121" selection-start-column="16" selection-end-line="121" selection-end-column="16" />
+        <state relative-caret-position="592">
+          <caret line="151" column="25" lean-forward="true" selection-start-line="151" selection-start-column="25" selection-end-line="151" selection-end-column="25" />
           <folding>
             <element signature="e#101#142#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Resto.js">
+    <entry file="file://$PROJECT_DIR$/src/components/Input.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="345">
-          <caret line="15" column="26" lean-forward="true" selection-start-line="15" selection-start-column="26" selection-end-line="15" selection-end-column="26" />
+          <caret line="15" column="14" lean-forward="true" selection-start-line="15" selection-start-column="14" selection-end-line="15" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Button.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="138">
+          <caret line="6" column="19" selection-start-line="6" selection-start-column="12" selection-end-line="6" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/FormAdd.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="293">
+          <caret line="29" column="8" lean-forward="true" selection-start-line="29" selection-start-column="8" selection-end-line="35" selection-end-column="10" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Resto.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="253">
+          <caret line="11" column="89" selection-start-line="11" selection-start-column="78" selection-end-line="11" selection-end-column="89" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/App.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1611">
-          <caret line="289" column="109" lean-forward="true" selection-start-line="289" selection-start-column="109" selection-end-line="289" selection-end-column="109" />
+        <state relative-caret-position="367">
+          <caret line="144" column="19" lean-forward="true" selection-start-line="144" selection-start-column="19" selection-end-line="144" selection-end-column="19" />
           <folding>
             <element signature="e#0#41#0" expanded="true" />
+            <element signature="n#!!block;n#onClickAdd#0;n#App#0" />
+            <element signature="n#!!block;n#onClickUpdate#0;n#App#0" />
             <element signature="n#!!block;n#searchResto#0;n#App#0" />
+            <element signature="n#!!block;n#onPageChange#0;n#App#0" />
+            <element signature="n#!!block;n#updateFormCuisine#0;n#App#0" />
+            <element signature="n#!!block;n#updateFormCuisine#1;n#App#0" />
+            <element signature="n#!!block;n#handleAddResto#1;n#App#0" />
             <element signature="n#!!block;n#getDataFromServerParam#0;n#App#0" />
+            <element signature="n#!!block;n#getDataFromServer2#0;n#App#0" />
             <element signature="n#!!block;n#getDataFromServer#0;n#App#0" />
             <element signature="n#!!block;n#getDataFromServer#0;n#App#0" />
             <element signature="e#3023#3047#0" />
             <element signature="e#6922#7260#0" />
             <element signature="e#191#324#0" />
-            <element signature="e#8485#9136#0" />
             <element signature="e#8542#8726#0" />
             <element signature="e#9155#9427#0" />
             <element signature="e#9242#9506#0" />
