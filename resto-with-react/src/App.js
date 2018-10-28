@@ -107,11 +107,11 @@ class App extends Component {
 
     handleAddResto(event) {
         console.log("ADD");
+        event.preventDefault();
         if (!this.state.nameResto || !this.state.cuisineType) {
             console.log("Vide");
             return;
         }
-        event.preventDefault();
         let form = {
             name: this.state.nameResto,
             cuisine: this.state.cuisineType
@@ -185,18 +185,32 @@ class App extends Component {
     removeResto(id) {
         console.log("DELETE");
         fetch('http://localhost:8080/api/restaurants/'+id, { method: "DELETE" })
-            .then((responseJSON) => {
-                let oldResto = this.state.resto;
+            .then(responseJSON => {
+                responseJSON.json().then(data => {
+                    console.log("Successful " + JSON.stringify(data));
+                });
+                /*let oldResto = this.state.resto;
                 this.setState({
                     resto: oldResto,
                     totalPage: this.state.totalPage
                 });
-                return responseJSON.json();
+                return responseJSON.json();*/
             })
             .catch(err => {
                 console.log("Erreur dans le DELETE : " + err);
             });
+        this.setState({
+            message: 'Ce restaurant a été supprimé',
+            showSuccess: true
+        });
         this.getDataFromServerParam(this.state.currentPage, this.state.nbRestoPerPage);
+        setTimeout(
+            function () {
+                this.setState({
+                    showSuccess: false
+                });
+            }.bind(this), 3000
+        );
     }
 
     getDataFromServerParam(numPage, nbPerPage) {
@@ -289,6 +303,24 @@ class App extends Component {
             .catch(err => {
                 console.log("Erreur dans le GET : " + err);
             });
+    }
+
+    paginationEvent(element) {
+        let cnumber = parseInt(element.target.innerHTML) - 1;
+        this.state.currentPage = cnumber;
+
+        this.getDataFromServerParam(this.state.currentPage, this.state.nbRestoPerPage);
+
+        if (element.target.id == 'thirdButton' || element.target.id == 'firstButton') {
+            if (this.state.currentPage == 0 || this.state.currentPage == Math.ceil(this.state.totalPage / this.state.nbRestoPerPage)) {
+                console.log("EXIST");
+                return;
+            }
+            console.log("changing");
+            document.querySelector('#firstButton').innerHTML = cnumber;
+            document.querySelector('#secondButton').innerHTML = cnumber + 1;
+            document.querySelector('#thirdButton').innerHTML = cnumber + 2;
+        }
     }
 
     componentDidMount() {
@@ -389,11 +421,11 @@ class App extends Component {
                               {/*<Pagination items={this.state.resto} onChangePage={this.onPageChange}/>*/}
                               <div className="btn-toolbar">
                                   <div className="btn-group mr-2">
-                                      <button type="button" className="btn btn-dark">1</button>
-                                      <button type="button" className="btn btn-dark">2</button>
-                                      <button type="button" className="btn btn-dark">3</button>
+                                      <button type="button" className="btn btn-dark" id="firstButton" onClick={this.paginationEvent.bind(this)}>1</button>
+                                      <button type="button" className="btn btn-dark" id="secondButton" onClick={this.paginationEvent.bind(this)}>2</button>
+                                      <button type="button" className="btn btn-dark" id="thirdButton" onClick={this.paginationEvent.bind(this)}>3</button>
                                       <button className="btn btn-light">...</button>
-                                      <button type="button" className="btn btn-dark">{Math.ceil(this.state.totalPage / this.state.nbRestoPerPage)}</button>
+                                      <button type="button" className="btn btn-dark" id="lastPageButton" onClick={this.paginationEvent.bind(this)}>{Math.ceil(this.state.totalPage / this.state.nbRestoPerPage)}</button>
                                   </div>
                               </div>
                           </div>
