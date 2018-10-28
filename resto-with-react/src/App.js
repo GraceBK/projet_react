@@ -1,9 +1,8 @@
+/* eslint-disable react/no-direct-mutation-state */
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-//import Pagination from 'react-js-pagination';
-// import Pagination from './components/Pagination';
 import Resto from './components/Resto';
 
 class App extends Component {
@@ -16,6 +15,15 @@ class App extends Component {
             update: false,
             showSuccess: false,
             message: '',
+            postRestaurant: {
+                nom: null,
+                cuisine: null
+            },
+            putRestaurant: {
+                id: null,
+                nom: null,
+                cuisine: null
+            },
             id: '',
             nameResto: '',
             cuisineType: '',
@@ -75,10 +83,6 @@ class App extends Component {
                 console.log("Erreur dans le GET : " + err);
             });
     }
-    onPageChange(pageNumber) {
-        console.log("PAGE n° : "+pageNumber);
-        this.setState({ currentPage: pageNumber })
-    }
 
     updateFormId(event) {
         console.log("CUISINE "+event.target.value);
@@ -109,7 +113,7 @@ class App extends Component {
             return;
         }
         let form = {
-            name: this.state.nameResto,
+            nom: this.state.nameResto,
             cuisine: this.state.cuisineType
         };
 
@@ -232,80 +236,12 @@ class App extends Component {
             });
     }
 
-    getDataFromServer3() {
-        console.log("--- GETTING DATA ---");
-        fetch('http://localhost:8080/api/restaurants?page=' + this.state.currentPage + '&pagesize=' + this.state.nbRestoPerPage)
-            .then(response => {
-                return response.json();   // transforme le json texte en objet js
-            })
-            .then(data => {   // data c'est le texte json de response ci-dessus
-                let newResto = [];
-                data.data.forEach((el) => {
-                    newResto.push({"id" : el._id, "name" : el.name, "cuisine": el.cuisine});
-                });
-                this.setState({
-                    resto: newResto,
-                    totalPage: data.count
-                });
-            })
-            .catch(err => {
-                console.log("Erreur dans le GET : " + err);
-            });
-    }
-
-    getDataFromServer2() {
-        console.log("--- GETTING DATA ---");
-        fetch('http://localhost:8080/api/restaurants?page=' + this.state.currentPage)
-            .then(response => {
-                return response.json();   // transforme le json texte en objet js
-            })
-            .then(data => {   // data c'est le texte json de response ci-dessus
-                let newResto = [];
-                data.data.forEach((el) => {
-                    newResto.push({"name" : el.name, "cuisine": el.cuisine});
-                });
-                this.setState({
-                    resto: newResto,
-                    totalPage: data.count
-                });
-            })
-            .catch(err => {
-                console.log("Erreur dans le GET : " + err);
-            });
-    }
-
-    getDataFromServer() {
-        console.log("--- GETTING DATA ---");
-        fetch('http://localhost:8080/api/restaurants')
-            .then(response => {
-                return response.json();   // transforme le json texte en objet js
-            })
-            .then(data => {   // data c'est le texte json de response ci-dessus
-                let newResto = [];
-                //let obj = {};
-                //console.log("-----> "+JSON.stringify(data, null, 2));
-                data.data.forEach((el) => {
-                    //obj["name"] = el.name;
-                    //obj["cuisine"] = el.cuisine;
-                    newResto.push({"name" : el.name, "cuisine": el.cuisine});
-                    //newResto.push(el.name);
-                });
-
-                this.setState({
-                    resto: newResto,
-                    totalPage: data.count
-                });
-            })
-            .catch(err => {
-                console.log("Erreur dans le GET : " + err);
-            });
-    }
-
     paginationEvent(element) {
         let cnumber = parseInt(element.target.innerHTML) - 1;
-        this.setState({
+        /*this.setState({
             currentPage: cnumber
-        });
+        });*/
+        this.state.currentPage = cnumber;
 
         this.getDataFromServerParam(this.state.currentPage, this.state.nbRestoPerPage);
 
@@ -324,11 +260,7 @@ class App extends Component {
     componentDidMount() {
         console.log("Component will mount");
         // this runs right before the <App> is rendered
-        // on va chercher des donnees sur le Web avec fetch, comme
-        // on a fait avec VueJS
-        //this.getDataFromServer();
-        //this.getDataFromServer2();
-        //this.getDataFromServer3();
+        // on va chercher des donnees sur le Web avec fetch, comme on a fait avec VueJS
         this.getDataFromServerParam(this.state.currentPage, this.state.nbRestoPerPage);
     }
 
@@ -345,21 +277,6 @@ class App extends Component {
                 removeResto={this.removeResto.bind(this)}
             />
         });
-
-        // Logique d'affichage du numero de page
-        const pageNums = [];
-        for (let i = 1; i <= Math.ceil(this.state.totalPage / this.state.nbRestoPerPage); i++) {
-            pageNums.push(i);
-        }
-        /*let laPagination = pageNums.map((num) => {
-            return <Pagination
-                activePage={this.state.currentPage}
-                itemsCountPerPage={10}
-                totalItemsCount={this.state.totalPage}
-                pageRangeDisplayed={5}
-                onChange={this.handlePageChange}
-            />
-        });*/
 
         return (
             <div> {/*className="App"*/}
@@ -410,8 +327,6 @@ class App extends Component {
                           </table>
                           <br/>
                           <div className="navigation">
-                              {/*laPagination*/}
-                              {/*<Pagination items={this.state.resto} onChangePage={this.onPageChange}/>*/}
                               <div className="btn-toolbar">
                                   <div className="btn-group mr-2">
                                       <button type="button" className="btn btn-dark" id="firstButton" onClick={this.paginationEvent.bind(this)}>1</button>
