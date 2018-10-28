@@ -30,7 +30,7 @@ class App extends Component {
             currentPage: 1,
             totalPage: 0,
             nbRestoPerPage: 5,
-            resto: []
+            restoList: []
         };
 
         this.handleChangeSelectTag = this.handleChangeSelectTag.bind(this);
@@ -75,7 +75,7 @@ class App extends Component {
                     newResto.push({"name" : el.name, "cuisine": el.cuisine});
                 });
                 this.setState({
-                    resto: newResto,
+                    restoList: newResto,
                     totalPage: data.count
                 });
             })
@@ -186,31 +186,35 @@ class App extends Component {
         console.log("DELETE");
         fetch('http://localhost:8080/api/restaurants/'+id, { method: "DELETE" })
             .then(responseJSON => {
-                responseJSON.json().then(data => {
-                    console.log("Successful " + JSON.stringify(data));
-                });
-                /*let oldResto = this.state.resto;
                 this.setState({
-                    resto: oldResto,
-                    totalPage: this.state.totalPage
+                    message: 'Ce restaurant a été supprimé',
+                    showSuccess: true
                 });
-                return responseJSON.json();*/
+                setTimeout(function () {
+                    this.setState({
+                        showSuccess: false
+                    });
+                }.bind(this), 3000);
+                /*responseJSON.json().then(data => {
+                    console.log("Successful " + JSON.stringify(data));
+                });*/
+                this.getDataFromServerParam(this.state.currentPage, this.state.nbRestoPerPage);
             })
             .catch(err => {
                 console.log("Erreur dans le DELETE : " + err);
             });
-        this.setState({
+        /*this.setState({
             message: 'Ce restaurant a été supprimé',
             showSuccess: true
-        });
-        this.getDataFromServerParam(this.state.currentPage, this.state.nbRestoPerPage);
-        setTimeout(
+        });*/
+        /*this.getDataFromServerParam(this.state.currentPage, this.state.nbRestoPerPage);*/
+        /*setTimeout(
             function () {
                 this.setState({
                     showSuccess: false
                 });
             }.bind(this), 3000
-        );
+        );*/
     }
 
     getDataFromServerParam(numPage, nbPerPage) {
@@ -225,7 +229,7 @@ class App extends Component {
                     newResto.push({"id" : el._id, "name" : el.name, "cuisine": el.cuisine});
                 });
                 this.setState({
-                    resto: newResto,
+                    restoList: newResto,
                     totalPage: data.count,
                     currentPage: numPage,
                     nbRestoPerPage: nbPerPage
@@ -266,7 +270,7 @@ class App extends Component {
 
     render() {
         console.log("RENDER taille "+this.state.totalPage);
-        let listAvecComponent = this.state.resto.map((el, index) => {
+        let listAvecComponent = this.state.restoList.map((el, index) => {
             //console.log("------------------ "+el.id);
             return <Resto
                 id={el.id}
@@ -280,9 +284,11 @@ class App extends Component {
 
         return (
             <div> {/*className="App"*/}
-              <nav className="navbar navbar-light bg-light">
+                {/*
+                <nav className="navbar navbar-light bg-light">
                   <img src={logo} width="70" height="70" alt=""/>
               </nav>
+                */}
               <div className="container">
                   <br/>
                   <h2>Table des restaurants</h2>
@@ -312,7 +318,7 @@ class App extends Component {
                                   ref={(input) => this.input = input}
                                   className="form-control" placeholder="Chercher par nom"/>
                           </div>
-                          Nombre de Resto : {this.state.resto.length} | Page {this.state.currentPage} / {Math.ceil(this.state.totalPage / this.state.nbRestoPerPage)}
+                          Nombre de Resto : {this.state.restoList.length} | Page {this.state.currentPage} / {Math.ceil(this.state.totalPage / this.state.nbRestoPerPage)}
                           <table className="table table-bordered">
                               <thead className="thead-dark">
                               <tr>
