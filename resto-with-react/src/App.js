@@ -1,6 +1,8 @@
 /* eslint-disable react/no-direct-mutation-state */
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import _ from 'lodash';
+
+//import logo from './logo.svg';
 import './App.css';
 
 import Resto from './components/Resto';
@@ -30,7 +32,9 @@ class App extends Component {
             currentPage: 1,
             totalPage: 0,
             nbRestoPerPage: 5,
-            restoList: []
+            query: '',
+            restoList: [],
+            restoFound: []
         };
 
         this.handleChangeSelectTag = this.handleChangeSelectTag.bind(this);
@@ -63,11 +67,49 @@ class App extends Component {
         this.getDataFromServerParam(this.state.currentPage, event.target.value);
     }
 
-    searchResto(restoId) {
+    handleChangeSearch(event) {
+        const query = event.target.value;
+        this.setState({
+            query
+        }, () => {
+            if (!this.state.query.length) {
+                //console.log("=======>  "+query);
+                this.setState(prevState => ({
+                    restoList: prevState.restoList,
+                    totalPage: Math.ceil(prevState.totalPage / prevState.nbRestoPerPage)
+                }));
+            } else {
+                //console.log("+++++++> "+query);
+                this.searchRestaurants();
+            }
+        });
+    }
+
+    searchRestaurants = _.debounce (
+        function () {
+            fetch('http://localhost:8080/api/restaurants?page=' + this.state.currentPage + '&pagesize=' + this.state.nbRestoPerPage + "&name=" + this.state.query)
+                .then(response => {
+                    response.json().then(res => {
+                        this.setState(prevState => ({
+                            restoList: res.data,
+                            totalPage: res.count ? Math.ceil(res.count / prevState.nbRestoPerPage) : prevState.totalPage
+                        }));
+                        //console.log(res.data.length+" ***********> "+JSON.stringify(res.data));
+                    })
+                })
+                .catch(err => {
+                    console.log("Erreur dans le get : " + err)
+                });
+        }, 300
+    );
+
+    searchResto(restoName) {
         console.log("--- SEARCH DATA ---");
-        fetch('http://localhost:8080/api/restaurants/' + restoId)
+        fetch('http://localhost:8080/api/restaurants?page=' + this.state.currentPage + '&pagesize=' + this.state.nbRestoPerPage + "&name=" + restoName)
             .then(response => {
-                return response.json();   // transforme le json texte en objet js
+                response.json().then(res => {
+
+                });   // transforme le json texte en objet js
             })
             .then(data => {   // data c'est le texte json de response ci-dessus
                 let newResto = [];
@@ -187,7 +229,8 @@ class App extends Component {
                 console.log("azertyu")
                 this.setState({
                     message: 'Ce restaurant a été modifié',
-                    showSuccess: true
+                    showSuccess: true,
+                    update: false
                 });
                 setTimeout(function () {
                     this.setState({
@@ -337,7 +380,8 @@ class App extends Component {
                           <div className="input-group mb-3">
                               <input
                                   type="text"
-                                  ref={(input) => this.input = input}
+                                  value={this.state.query}
+                                  onChange={this.handleChangeSearch.bind(this)}
                                   className="form-control" placeholder="Chercher par nom"/>
                           </div>
                           Nombre de Resto : {this.state.restoList.length} | Page {this.state.currentPage} / {Math.ceil(this.state.totalPage / this.state.nbRestoPerPage)}
