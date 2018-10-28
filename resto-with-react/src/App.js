@@ -87,10 +87,6 @@ class App extends Component {
         })
     }
 
-    getId(index) {
-        console.log("-%-"+this);
-    }
-
     updateFormCuisine(event) {
         console.log("CUISINE "+event.target.value);
         this.setState({
@@ -307,12 +303,14 @@ class App extends Component {
 
     paginationEvent(element) {
         let cnumber = parseInt(element.target.innerHTML) - 1;
-        this.state.currentPage = cnumber;
+        this.setState({
+            currentPage: cnumber
+        });
 
         this.getDataFromServerParam(this.state.currentPage, this.state.nbRestoPerPage);
 
-        if (element.target.id == 'thirdButton' || element.target.id == 'firstButton') {
-            if (this.state.currentPage == 0 || this.state.currentPage == Math.ceil(this.state.totalPage / this.state.nbRestoPerPage)) {
+        if (element.target.id === 'thirdButton' || element.target.id === 'firstButton') {
+            if (this.state.currentPage === 0 || this.state.currentPage === Math.ceil(this.state.totalPage / this.state.nbRestoPerPage)) {
                 console.log("EXIST");
                 return;
             }
@@ -338,7 +336,6 @@ class App extends Component {
         console.log("RENDER taille "+this.state.totalPage);
         let listAvecComponent = this.state.resto.map((el, index) => {
             //console.log("------------------ "+el.id);
-            let getId = this.getId.bind(index);
             return <Resto
                 id={el.id}
                 name={el.name}
@@ -347,10 +344,6 @@ class App extends Component {
                 updateResto={this.onClickUpdate.bind(this)}
                 removeResto={this.removeResto.bind(this)}
             />
-        });
-
-        let nameResto = this.state.resto.map((el) => {
-            return el.name
         });
 
         // Logique d'affichage du numero de page
@@ -384,7 +377,7 @@ class App extends Component {
                   </div>
 
                   <div className="row">
-                      <div className="col-lg-8" className={this.state.add || this.state.update ? 'col-lg-8' : 'col-lg'}>
+                      <div className={this.state.add || this.state.update ? 'col-lg-8' : 'col-lg'}>
                           <div className="input-group mb-3">
                               <div className="input-group-prepend">
                                   <label className="input-group-text" htmlFor="elementPageDropDown">Elements par page</label>
