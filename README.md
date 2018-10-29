@@ -34,9 +34,7 @@ npm start
 1. La Recherche des Restaurants (par type de Cuisine)
 
 ## Video de démo
-<video width="800" height="600" controls>
-    <source src="demo.mov" type="video/mp4">
-</video>
+[![](http://img.youtube.com/vi/7TXGZLFFatc/0.jpg)](http://www.youtube.com/watch?v=7TXGZLFFatc "")
 
 ## Developing
 ```
